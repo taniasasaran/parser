@@ -11,7 +11,7 @@ public class Grammar {
     String filename;
     ArrayList<String> nonTerminals;
     ArrayList<String> terminals;
-    //TODO: change this map to String, ArrayList<ArrayList<String>>
+    // changed this map to String, ArrayList<ArrayList<String>>
     // it should support A -> B C | D E | F G as A: [[B, C], [D, E], [F, G]]
     Map<String, ArrayList<ArrayList<String>>> productions;  // key: nonterminal (lhs), value: list of expressions (rhs)
     Map<ArrayList<String>, ArrayList<ArrayList<String>>> productionsCG; // only contextful productions
@@ -30,10 +30,10 @@ public class Grammar {
         // read from file and populate nonTerminals, terminals, productions, productionsCG
         // read from file filename row by row
         // for each row, split it into lhs and rhs
-        // add lhs to nonTerminals
+        // add lhs to nonTerminals cleaning it up (remove <> for bnf)
         // add lhs, rhs to productions (lhs is key, rhs is value)
         // add lhs, rhs to productionsCG (lhs is key, rhs is value) only if lhs is a list
-        // for each symbol in rhs, if it has <> around it, add it to nonTerminals(bnf) or "" to terminals(ebnf)
+        // for each symbol in rhs, if it has <> around it, add it to nonTerminals(bnf)
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -41,9 +41,8 @@ public class Grammar {
                 if (line.isEmpty()) {
                     continue;
                 }
-                // split line into lhs and rhs once we find the "=" sign (lhs = rhs) rhs can contain = sign
-                // TODO: needs change if bnf is used
-                String[] splitLine = line.split("=", 2);
+                // split line into lhs and rhs once we find the "::=" sign (lhs ::= rhs) rhs can contain ::= sign
+                String[] splitLine = line.split("::=", 2);
                 String lhs = splitLine[0].trim();
                 String rhs = splitLine[1].trim();
                 String[] rhsSymbols = rhs.split("\\|");
@@ -64,7 +63,7 @@ public class Grammar {
 //                    productionsCG.put(lhsList, new ArrayList<>()(Arrays.asList(rhsSymbols)));
                 } else {
 //                    productions.put(lhs, new ArrayList<>(Arrays.asList(rhsSymbols)));
-
+                    lhs = lhs.replaceAll("^<|>$", "");
                     if (!nonTerminals.contains(lhs)) {
                         nonTerminals.add(lhs);
                     }
@@ -74,13 +73,13 @@ public class Grammar {
                     for (String rhsSymbol : rhsList) {
                         // remove leading and trailing whitespace and "" for ebnf / <> for bnf
                         String rhsSymbolClean = rhsSymbol.trim();
-                        if (rhsSymbolClean.startsWith("\"") && rhsSymbolClean.endsWith("\"")) {
-                            rhsSymbolClean = rhsSymbolClean.replaceAll("^\"|\"$", "");
-                            if (!terminals.contains(rhsSymbolClean)) {
-                                terminals.add(rhsSymbolClean);
+                        if (rhsSymbolClean.startsWith("<") && rhsSymbolClean.endsWith(">") && !rhsSymbolClean.equals("<>")) {
+                            rhsSymbolClean = rhsSymbolClean.replaceAll("^<|>$", "");
+                            if (!nonTerminals.contains(rhsSymbolClean)) {
+                                nonTerminals.add(rhsSymbolClean);
                             }
-                        } else if (!nonTerminals.contains(rhsSymbolClean)){
-                            nonTerminals.add(rhsSymbolClean);
+                        } else if (!terminals.contains(rhsSymbolClean)){
+                            terminals.add(rhsSymbolClean);
                         }
                     }
                 }
