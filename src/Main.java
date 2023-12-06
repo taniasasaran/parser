@@ -9,7 +9,6 @@ public class Main {
         grammar.printTerminals();
         System.out.println();
         System.out.println(grammar.isCFG());
-        System.out.print("contextful productions: " + grammar.productionsCG);
         //TODO: LR(0) Parser
     }
 }

@@ -14,15 +14,19 @@ public class Grammar {
     // changed this map to String, ArrayList<ArrayList<String>>
     // it should support A -> B C | D E | F G as A: [[B, C], [D, E], [F, G]]
     Map<String, ArrayList<ArrayList<String>>> productions;  // key: nonterminal (lhs), value: list of expressions (rhs)
-    Map<ArrayList<String>, ArrayList<ArrayList<String>>> productionsCG; // only contextful productions
+    Boolean isCFG;
 
     public Grammar(String filename) {
         this.filename = filename;
         this.nonTerminals = new ArrayList<>();
         this.terminals = new ArrayList<>();
         this.productions = new HashMap<>();
-        this.productionsCG = new HashMap<>();
+        isCFG = true;
         readGrammar();
+    }
+
+    private void setFalseCFG() {
+        isCFG = false;
     }
 
     public void readGrammar() {
@@ -32,7 +36,6 @@ public class Grammar {
         // for each row, split it into lhs and rhs
         // add lhs to nonTerminals cleaning it up (remove <> for bnf)
         // add lhs, rhs to productions (lhs is key, rhs is value)
-        // add lhs, rhs to productionsCG (lhs is key, rhs is value) only if lhs is a list
         // for each symbol in rhs, if it has <> around it, add it to nonTerminals(bnf)
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -55,12 +58,11 @@ public class Grammar {
                 }
 
                 // add lhs, rhs to productions (lhs is key, rhs is value)
-                // add lhs, rhs to productionsCG only if lhs is a list (lhs is key, rhs is value)
-                //TODO: todoododo
                 String [] lhsSplit = lhs.split(" ");
                 if (lhsSplit.length > 1) {
                     ArrayList<String> lhsList = new ArrayList<>(Arrays.asList(lhsSplit));
 //                    productionsCG.put(lhsList, new ArrayList<>()(Arrays.asList(rhsSymbols)));
+                    setFalseCFG();
                 } else {
 //                    productions.put(lhs, new ArrayList<>(Arrays.asList(rhsSymbols)));
                     lhs = lhs.replaceAll("^<|>$", "");
@@ -133,6 +135,6 @@ public class Grammar {
     }
 
     public boolean isCFG() {
-        return productionsCG.isEmpty();
+        return isCFG;
     }
 }
