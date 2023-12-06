@@ -60,12 +60,10 @@ public class Grammar {
                 // add lhs, rhs to productions (lhs is key, rhs is value)
                 String [] lhsSplit = lhs.split(" ");
                 if (lhsSplit.length > 1) {
-                    ArrayList<String> lhsList = new ArrayList<>(Arrays.asList(lhsSplit));
-//                    productionsCG.put(lhsList, new ArrayList<>()(Arrays.asList(rhsSymbols)));
                     setFalseCFG();
                 } else {
-//                    productions.put(lhs, new ArrayList<>(Arrays.asList(rhsSymbols)));
                     lhs = lhs.replaceAll("^<|>$", "");
+                    productions.put(lhs, rhsSymbolsList);
                     if (!nonTerminals.contains(lhs)) {
                         nonTerminals.add(lhs);
                     }

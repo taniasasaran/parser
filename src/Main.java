@@ -4,6 +4,8 @@ public class Main {
         Grammar grammar = new Grammar(filename);
         grammar.printProductions();
         System.out.println();
+        grammar.printProductions("term");
+        System.out.println();
         grammar.printNonTerminals();
         System.out.println();
         grammar.printTerminals();
