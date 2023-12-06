@@ -54,6 +54,8 @@ public class Grammar {
                 for (String rhsSymbol : rhsSymbols) {
                     String[] rhsSymbolSplit = rhsSymbol.trim().split(" ");
                     ArrayList<String> rhsSymbolList = new ArrayList<>(Arrays.asList(rhsSymbolSplit));
+                    // eliminate <> from symbols in rhsSymbolList with regex and streams
+                    rhsSymbolList.replaceAll(s -> s.replaceAll("^<|>$", ""));
                     rhsSymbolsList.add(rhsSymbolList);
                 }
 
@@ -73,13 +75,13 @@ public class Grammar {
                     for (String rhsSymbol : rhsList) {
                         // remove leading and trailing whitespace and "" for ebnf / <> for bnf
                         String rhsSymbolClean = rhsSymbol.trim();
-                        if (rhsSymbolClean.startsWith("<") && rhsSymbolClean.endsWith(">") && !rhsSymbolClean.equals("<>")) {
-                            rhsSymbolClean = rhsSymbolClean.replaceAll("^<|>$", "");
-                            if (!nonTerminals.contains(rhsSymbolClean)) {
-                                nonTerminals.add(rhsSymbolClean);
+                        if (rhsSymbolClean.startsWith("\"") && rhsSymbolClean.endsWith("\"")) {
+                            rhsSymbolClean = rhsSymbolClean.replaceAll("^\"|\"$", "");
+                            if (!terminals.contains(rhsSymbolClean)) {
+                                terminals.add(rhsSymbolClean);
                             }
-                        } else if (!terminals.contains(rhsSymbolClean)){
-                            terminals.add(rhsSymbolClean);
+                        } else if (!nonTerminals.contains(rhsSymbolClean)){
+                            nonTerminals.add(rhsSymbolClean);
                         }
                     }
                 }

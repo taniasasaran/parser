@@ -1,39 +1,39 @@
 <program> ::= <stmtlist>
 
-<declstmt> ::= <type> <IDENTIFIER> | <type> <IDENTIFIER> [ <nr> ]
+<declstmt> ::= <type> <IDENTIFIER> | <type> <IDENTIFIER> "[" <nr> "]"
 
-<type> ::= char | int | string
+<type> ::= "char" | "int" | "string"
 
-<stmtlist> ::= <stmt> | <stmt> ; <stmtlist>
+<stmtlist> ::= <stmt> | <stmt> ";" <stmtlist>
 
 <stmt> ::= <simplstmt> | <structstmt>
 
 <simplstmt> ::= <assignstmt> | <iostmt> | <declstmt>
 
-<assignstmt> ::= <IDENTIFIER> = <expression>
+<assignstmt> ::= <IDENTIFIER> "=" <expression>
 
-<expression> ::= <expression> + <term> | <expression> - <term> | <term>
+<expression> ::= <expression> "+" <term> | <expression> "-" <term> | <term>
 
-<term> ::= <term> * <factor> | <term> / <factor> | <factor>
+<term> ::= <term> "*" <factor> | <term> "/" <factor> | <factor>
 
-<factor> ::= <IDENTIFIER> | ( <expression> )
+<factor> ::= <IDENTIFIER> | "(" <expression> ")"
 
 <iostmt> ::= <readstmt> | <writestmt>
 
-<readstmt> ::= READ ( <IDENTIFIER> )
+<readstmt> ::= "READ" "(" <IDENTIFIER> ")"
 
-<writestmt> ::= WRITE ( <expression> )
+<writestmt> ::= "WRITE" "(" <expression> ")"
 
 <structstmt> ::= <cmpdstmt> | <ifestmt> | <whilestmt>
 
-<ifstmt> ::= IF <condition> { <stmt> }
+<ifstmt> ::= "IF" <condition> "{" <stmt> "}"
 
-<elsestmt> ::= ELSE { <stmt> }
+<elsestmt> ::= "ELSE" "{" <stmt> "}"
 
 <ifestmt> ::= <ifstmt> | <ifstmt> <elsestmt>
 
-<whilestmt> ::= WHILE <condition> { <stmt> }
+<whilestmt> ::= "WHILE" <condition> "{" <stmt> "}"
 
 <condition> ::= <expression> <RELATION> <expression>
 
-<RELATION> ::= < | <= | == | <> | >= | >
+<RELATION> ::= "<" | "<=" | "==" | "<>" | ">=" | ">"
