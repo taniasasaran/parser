@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +12,8 @@ public class Grammar {
     ArrayList<String> terminals;
     // changed this map to String, ArrayList<ArrayList<String>>
     // it should support A -> B C | D E | F G as A: [[B, C], [D, E], [F, G]]
+
+    String startingSymbol;
     Map<String, ArrayList<ArrayList<String>>> productions;  // key: nonterminal (lhs), value: list of expressions (rhs)
     Map<ArrayList<String>, ArrayList<ArrayList<String>>> productionsCG; // only contextful productions
 
@@ -34,6 +35,7 @@ public class Grammar {
         // add lhs, rhs to productions (lhs is key, rhs is value)
         // add lhs, rhs to productionsCG (lhs is key, rhs is value) only if lhs is a list
         // for each symbol in rhs, if it has <> around it, add it to nonTerminals(bnf)
+
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -57,13 +59,19 @@ public class Grammar {
                 // add lhs, rhs to productions (lhs is key, rhs is value)
                 // add lhs, rhs to productionsCG only if lhs is a list (lhs is key, rhs is value)
                 //TODO: todoododo
+
                 String [] lhsSplit = lhs.split(" ");
                 if (lhsSplit.length > 1) {
                     ArrayList<String> lhsList = new ArrayList<>(Arrays.asList(lhsSplit));
-//                    productionsCG.put(lhsList, new ArrayList<>()(Arrays.asList(rhsSymbols)));
+                    productionsCG.put(lhsList, rhsSymbolsList);
                 } else {
-//                    productions.put(lhs, new ArrayList<>(Arrays.asList(rhsSymbols)));
+                    productions.put(lhs, rhsSymbolsList);
                     lhs = lhs.replaceAll("^<|>$", "");
+
+                    if(nonTerminals.isEmpty()){
+                        startingSymbol = lhs;
+                    }
+
                     if (!nonTerminals.contains(lhs)) {
                         nonTerminals.add(lhs);
                     }
@@ -102,11 +110,9 @@ public class Grammar {
     }
 
     public void printProductions() {
-        for (Map.Entry<String, ArrayList<ArrayList<String>>> entry : productions.entrySet()) {
-            String nonTerminal = entry.getKey();
-            ArrayList<ArrayList<String>> productions = entry.getValue();
-            System.out.print(nonTerminal + " -> ");
-            for (ArrayList<String> production: productions) {
+        productions.forEach((nonTerminal, productions) -> {
+            System.out.print(nonTerminal + " ::= ");
+            for (ArrayList<String> production : productions) {
                 for (String symbol : production) {
                     System.out.print(symbol + " ");
                 }
@@ -115,12 +121,12 @@ public class Grammar {
                 }
             }
             System.out.println();
-        }
+        });
     }
 
     public void printProductions(String nonTerminal) {
         ArrayList<ArrayList<String>> productions = this.productions.get(nonTerminal);
-        System.out.print(nonTerminal + " -> ");
+        System.out.print(nonTerminal + " ::= ");
         for (ArrayList<String> production : productions) {
             for (String symbol : production) {
                 System.out.print(symbol + " ");
