@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        String filename = "resources/g1.txt"; // Syntax.in from GitHub 1b
+        String filename = "resources/g2.txt"; // Syntax.in from GitHub 1b
         Grammar grammar = new Grammar(filename);
         grammar.printProductions();
         System.out.println();

@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,10 +8,9 @@ import java.util.Map;
 
 public class Grammar {
     String filename;
+    String startingSymbol;
     ArrayList<String> nonTerminals;
     ArrayList<String> terminals;
-    // changed this map to String, ArrayList<ArrayList<String>>
-    // it should support A -> B C | D E | F G as A: [[B, C], [D, E], [F, G]]
     Map<String, ArrayList<ArrayList<String>>> productions;  // key: nonterminal (lhs), value: list of expressions (rhs)
     Boolean isCFG;
 
@@ -30,8 +28,7 @@ public class Grammar {
     }
 
     public void readGrammar() {
-        // TODO: need to change grammar in bnf and redo part of this function
-        // read from file and populate nonTerminals, terminals, productions, productionsCG
+        // read from file and populate nonTerminals, terminals, productions
         // read from file filename row by row
         // for each row, split it into lhs and rhs
         // add lhs to nonTerminals cleaning it up (remove <> for bnf)
@@ -65,6 +62,10 @@ public class Grammar {
                     setFalseCFG();
                 } else {
                     lhs = lhs.replaceAll("^<|>$", "");
+                    //the lhs of the first production is the
+                    if(nonTerminals.isEmpty()){
+                        startingSymbol = lhs;
+                    }
                     productions.put(lhs, rhsSymbolsList);
                     if (!nonTerminals.contains(lhs)) {
                         nonTerminals.add(lhs);
@@ -104,11 +105,9 @@ public class Grammar {
     }
 
     public void printProductions() {
-        for (Map.Entry<String, ArrayList<ArrayList<String>>> entry : productions.entrySet()) {
-            String nonTerminal = entry.getKey();
-            ArrayList<ArrayList<String>> productions = entry.getValue();
+        productions.forEach((nonTerminal, productions) -> {
             System.out.print(nonTerminal + " -> ");
-            for (ArrayList<String> production: productions) {
+            for (ArrayList<String> production : productions) {
                 for (String symbol : production) {
                     System.out.print(symbol + " ");
                 }
@@ -117,7 +116,7 @@ public class Grammar {
                 }
             }
             System.out.println();
-        }
+        });
     }
 
     public void printProductions(String nonTerminal) {
