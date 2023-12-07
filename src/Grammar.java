@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,18 +13,20 @@ public class Grammar {
     ArrayList<String> terminals;
     // changed this map to String, ArrayList<ArrayList<String>>
     // it should support A -> B C | D E | F G as A: [[B, C], [D, E], [F, G]]
-
-    String startingSymbol;
     Map<String, ArrayList<ArrayList<String>>> productions;  // key: nonterminal (lhs), value: list of expressions (rhs)
-    Map<ArrayList<String>, ArrayList<ArrayList<String>>> productionsCG; // only contextful productions
+    Boolean isCFG;
 
     public Grammar(String filename) {
         this.filename = filename;
         this.nonTerminals = new ArrayList<>();
         this.terminals = new ArrayList<>();
         this.productions = new HashMap<>();
-        this.productionsCG = new HashMap<>();
+        isCFG = true;
         readGrammar();
+    }
+
+    private void setFalseCFG() {
+        isCFG = false;
     }
 
     public void readGrammar() {
@@ -33,9 +36,7 @@ public class Grammar {
         // for each row, split it into lhs and rhs
         // add lhs to nonTerminals cleaning it up (remove <> for bnf)
         // add lhs, rhs to productions (lhs is key, rhs is value)
-        // add lhs, rhs to productionsCG (lhs is key, rhs is value) only if lhs is a list
         // for each symbol in rhs, if it has <> around it, add it to nonTerminals(bnf)
-
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -53,25 +54,18 @@ public class Grammar {
                 for (String rhsSymbol : rhsSymbols) {
                     String[] rhsSymbolSplit = rhsSymbol.trim().split(" ");
                     ArrayList<String> rhsSymbolList = new ArrayList<>(Arrays.asList(rhsSymbolSplit));
+                    // eliminate <> from symbols in rhsSymbolList with regex and streams
+                    rhsSymbolList.replaceAll(s -> s.replaceAll("^<|>$", ""));
                     rhsSymbolsList.add(rhsSymbolList);
                 }
 
                 // add lhs, rhs to productions (lhs is key, rhs is value)
-                // add lhs, rhs to productionsCG only if lhs is a list (lhs is key, rhs is value)
-                //TODO: todoododo
-
                 String [] lhsSplit = lhs.split(" ");
                 if (lhsSplit.length > 1) {
-                    ArrayList<String> lhsList = new ArrayList<>(Arrays.asList(lhsSplit));
-                    productionsCG.put(lhsList, rhsSymbolsList);
+                    setFalseCFG();
                 } else {
-                    productions.put(lhs, rhsSymbolsList);
                     lhs = lhs.replaceAll("^<|>$", "");
-
-                    if(nonTerminals.isEmpty()){
-                        startingSymbol = lhs;
-                    }
-
+                    productions.put(lhs, rhsSymbolsList);
                     if (!nonTerminals.contains(lhs)) {
                         nonTerminals.add(lhs);
                     }
@@ -81,13 +75,13 @@ public class Grammar {
                     for (String rhsSymbol : rhsList) {
                         // remove leading and trailing whitespace and "" for ebnf / <> for bnf
                         String rhsSymbolClean = rhsSymbol.trim();
-                        if (rhsSymbolClean.startsWith("<") && rhsSymbolClean.endsWith(">") && !rhsSymbolClean.equals("<>")) {
-                            rhsSymbolClean = rhsSymbolClean.replaceAll("^<|>$", "");
-                            if (!nonTerminals.contains(rhsSymbolClean)) {
-                                nonTerminals.add(rhsSymbolClean);
+                        if (rhsSymbolClean.startsWith("\"") && rhsSymbolClean.endsWith("\"")) {
+                            rhsSymbolClean = rhsSymbolClean.replaceAll("^\"|\"$", "");
+                            if (!terminals.contains(rhsSymbolClean)) {
+                                terminals.add(rhsSymbolClean);
                             }
-                        } else if (!terminals.contains(rhsSymbolClean)){
-                            terminals.add(rhsSymbolClean);
+                        } else if (!nonTerminals.contains(rhsSymbolClean)){
+                            nonTerminals.add(rhsSymbolClean);
                         }
                     }
                 }
@@ -110,9 +104,11 @@ public class Grammar {
     }
 
     public void printProductions() {
-        productions.forEach((nonTerminal, productions) -> {
-            System.out.print(nonTerminal + " ::= ");
-            for (ArrayList<String> production : productions) {
+        for (Map.Entry<String, ArrayList<ArrayList<String>>> entry : productions.entrySet()) {
+            String nonTerminal = entry.getKey();
+            ArrayList<ArrayList<String>> productions = entry.getValue();
+            System.out.print(nonTerminal + " -> ");
+            for (ArrayList<String> production: productions) {
                 for (String symbol : production) {
                     System.out.print(symbol + " ");
                 }
@@ -121,12 +117,12 @@ public class Grammar {
                 }
             }
             System.out.println();
-        });
+        }
     }
 
     public void printProductions(String nonTerminal) {
         ArrayList<ArrayList<String>> productions = this.productions.get(nonTerminal);
-        System.out.print(nonTerminal + " ::= ");
+        System.out.print(nonTerminal + " -> ");
         for (ArrayList<String> production : productions) {
             for (String symbol : production) {
                 System.out.print(symbol + " ");
@@ -139,6 +135,6 @@ public class Grammar {
     }
 
     public boolean isCFG() {
-        return productionsCG.isEmpty();
+        return isCFG;
     }
 }

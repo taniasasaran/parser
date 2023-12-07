@@ -4,12 +4,13 @@ public class Main {
         Grammar grammar = new Grammar(filename);
         grammar.printProductions();
         System.out.println();
+        grammar.printProductions("term");
+        System.out.println();
         grammar.printNonTerminals();
         System.out.println();
         grammar.printTerminals();
         System.out.println();
         System.out.println(grammar.isCFG());
-        System.out.print("contextful productions: " + grammar.productionsCG);
         //TODO: LR(0) Parser
     }
 }
