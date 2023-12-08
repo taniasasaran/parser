@@ -59,7 +59,7 @@ public class Grammar {
                 // add lhs, rhs to productions (lhs is key, rhs is value)
                 String [] lhsSplit = lhs.split(" ");
                 if (lhsSplit.length > 1) {
-                    setFalseCFG();
+                    setFalseCFG(); // if lhs has more than one symbol, it's not a CFG
                 } else {
                     lhs = lhs.replaceAll("^<|>$", "");
                     //the lhs of the first production is the
@@ -112,7 +112,7 @@ public class Grammar {
                     System.out.print(symbol + " ");
                 }
                 if (productions.indexOf(production) != productions.size() - 1) {
-                    System.out.print(" | ");
+                    System.out.print("| ");
                 }
             }
             System.out.println();
@@ -127,7 +127,7 @@ public class Grammar {
                 System.out.print(symbol + " ");
             }
             if (productions.indexOf(production) != productions.size() - 1) {
-                System.out.print(" | ");
+                System.out.print("| ");
             }
         }
         System.out.println();
