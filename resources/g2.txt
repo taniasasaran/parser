@@ -1,3 +1,5 @@
+<S'> ::= <program>
+
 <program> ::= <stmtlist>
 
 <declstmt> ::= <type> <IDENTIFIER> | <type> <IDENTIFIER> "[" <nr> "]"
