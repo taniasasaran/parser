@@ -23,6 +23,18 @@ public class Grammar {
         readGrammar();
     }
 
+    public ArrayList<String> getNonTerminals() {
+        return nonTerminals;
+    }
+
+    public ArrayList<String> getTerminals() {
+        return terminals;
+    }
+
+    public Map<String, ArrayList<ArrayList<String>>> getProductions() {
+        return productions;
+    }
+
     private void setFalseCFG() {
         isCFG = false;
     }

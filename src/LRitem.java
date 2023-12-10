@@ -16,24 +16,12 @@ public class LRitem {
         return rhs;
     }
 
-    public void setRhs(String rhs) {
-        this.rhs = rhs;
-    }
-
     public ArrayList<String> getAlfa() {
         return alfa;
     }
 
-    public void setAlfa(ArrayList<String> alfa) {
-        this.alfa = alfa;
-    }
-
     public ArrayList<String> getBeta() {
         return beta;
-    }
-
-    public void setBeta(ArrayList<String> beta) {
-        this.beta = beta;
     }
 
     public LRitem constructNewDotShift() {
@@ -49,5 +37,12 @@ public class LRitem {
         if (this == o) return true;
         if (!(o instanceof LRitem lRitem)) return false;
         return Objects.equals(rhs, lRitem.rhs) && Objects.equals(alfa, lRitem.alfa) && Objects.equals(beta, lRitem.beta);
+    }
+
+    @Override
+    public String toString() {
+        String alfa = String.join("", this.alfa);
+        String beta = String.join("", this.beta);
+        return "[" + rhs + "->" + alfa + "." + beta + "]";
     }
 }
