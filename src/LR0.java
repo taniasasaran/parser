@@ -9,6 +9,9 @@ public class LR0 {
     public ArrayList<LRitem> goTo(State s, String symbol) {
         ArrayList<LRitem> result = new ArrayList<>();
         for (LRitem item : s.getItems()) {
+            if (item.getBeta().isEmpty()) {
+                continue;
+            }
             if (item.getBeta().get(0).equals(symbol)) {
                 result.add(item.constructNewDotShift());
             }

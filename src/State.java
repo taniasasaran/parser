@@ -11,15 +11,26 @@ public class State {
         return items;
     }
 
+    public void addItem(LRitem item) {
+        items.add(item);
+    }
+
+    public void setItems(ArrayList<LRitem> items) {
+        this.items = items;
+    }
+
     public ArrayList<LRitem> closure(ArrayList<LRitem> I, Grammar enhancedGrammar) {
         ArrayList<LRitem> C = new ArrayList<>(I);
         ArrayList<LRitem> C1 = new ArrayList<>(C);
         boolean added = true;
         while (added) {
             added = false;
+            C1 = new ArrayList<>(C);
             for (LRitem item : C) {
                 // make a copy of C to avoid ConcurrentModificationException
-                C1 = new ArrayList<>(C);
+                if (item.getBeta().isEmpty()) {
+                    continue;
+                }
                 String B = item.getBeta().get(0);
                 if (enhancedGrammar.getNonTerminals().contains(B)) {
                     // for B->y in P do
@@ -37,5 +48,19 @@ public class State {
             C = new ArrayList<>(C1);
         }
         return C;
+    }
+
+    public String toString() {
+        return items.toString();
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof State s)) {
+            return false;
+        }
+        return this.items.equals(s.items);
     }
 }

@@ -31,6 +31,13 @@ public class Grammar {
         return terminals;
     }
 
+    public ArrayList<String> getGrammarSymbols(){
+        ArrayList<String> grammarSymbols = new ArrayList<>();
+        grammarSymbols.addAll(nonTerminals);
+        grammarSymbols.addAll(terminals);
+        return grammarSymbols;
+    }
+
     public Map<String, ArrayList<ArrayList<String>>> getProductions() {
         return productions;
     }
@@ -68,25 +75,9 @@ public class Grammar {
                     rhsSymbolsList.add(rhsSymbolList);
                 }
 
-                // add lhs, rhs to productions (lhs is key, rhs is value)
-                String [] lhsSplit = lhs.split(" ");
-                if (lhsSplit.length > 1) {
-                    setFalseCFG(); // if lhs has more than one symbol, it's not a CFG
-                } else {
-                    lhs = lhs.replaceAll("^<|>$", "");
-                    //the lhs of the first production is the
-                    if(nonTerminals.isEmpty()){
-                        startingSymbol = lhs;
-                    }
-                    productions.put(lhs, rhsSymbolsList);
-                    if (!nonTerminals.contains(lhs)) {
-                        nonTerminals.add(lhs);
-                    }
-                }
-                // for each symbol in rhs, add it to terminals or nonTerminals
                 for (ArrayList<String> rhsList: rhsSymbolsList) {
                     for (String rhsSymbol : rhsList) {
-                        // remove leading and trailing whitespace and "" for ebnf / <> for bnf
+                        // remove leading and trailing whitespace and <> for bnf
                         String rhsSymbolClean = rhsSymbol.trim();
                         if (rhsSymbolClean.startsWith("\"") && rhsSymbolClean.endsWith("\"")) {
                             rhsSymbolClean = rhsSymbolClean.replaceAll("^\"|\"$", "");
@@ -96,6 +87,25 @@ public class Grammar {
                         } else if (!nonTerminals.contains(rhsSymbolClean)){
                             nonTerminals.add(rhsSymbolClean);
                         }
+                    }
+                }
+
+                // eliminate "" from terminals from rhsSymbolsList with regex and streams
+                rhsSymbolsList.forEach(rhsList -> rhsList.replaceAll(s -> s.replaceAll("^\"|\"$", "")));
+
+                // add lhs, rhs to productions (lhs is key, rhs is value)
+                String [] lhsSplit = lhs.split(" ");
+                if (lhsSplit.length > 1) {
+                    setFalseCFG(); // if lhs has more than one symbol, it's not a CFG
+                } else {
+                    lhs = lhs.replaceAll("^<|>$", "");
+                    //the lhs of the first production is the
+                    if(productions.isEmpty()){
+                        startingSymbol = lhs;
+                    }
+                    productions.put(lhs, rhsSymbolsList);
+                    if (!nonTerminals.contains(lhs)) {
+                        nonTerminals.add(lhs);
                     }
                 }
             }
