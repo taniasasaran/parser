@@ -16,12 +16,8 @@ public class Main {
 //        System.out.println(grammar.isCFG());
         //TODO: LR(0) Parser
         Grammar enhancedGrammar = new Grammar(filename);
-        // s0 = closure({[S'->.S]})
-        State s0 = new State(new ArrayList<>());
-        s0.items.add(new LRitem("S'", new ArrayList<>(), new ArrayList<String>() {{
-            add("S");
-        }}));
-        ArrayList<LRitem> closure = s0.closure(s0.items, enhancedGrammar);
-        System.out.println(closure);
+        LR0 lr0 = new LR0(enhancedGrammar);
+        ArrayList<State> states = lr0.canonicalCollection(enhancedGrammar);
+        lr0.printStates(states);
     }
 }
