@@ -31,17 +31,18 @@ public class State {
                 if (item.getBeta().isEmpty()) {
                     continue;
                 }
+                //TODO
                 String B = item.getBeta().get(0);
                 if (enhancedGrammar.getNonTerminals().contains(B)) {
                     // for B->y in P do
-                    for (ArrayList<String> rhs : enhancedGrammar.getProductions().get(B)) {
-                        // if B->.y not in C then
-                        LRitem newItem = new LRitem(B, new ArrayList<>(), rhs);
-                        if (!C1.contains(newItem)) {
-                            C1.add(newItem);
-                            added = true;
-                        }
+                    ArrayList<String> rhs = enhancedGrammar.getProductions().get(B);
+                    // if B->.y not in C then
+                    LRitem newItem = new LRitem(B, new ArrayList<>(), rhs);
+                    if (!C1.contains(newItem)) {
+                        C1.add(newItem);
+                        added = true;
                     }
+
                 }
             }
             // add all items from C1 to C

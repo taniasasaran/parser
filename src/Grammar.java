@@ -11,7 +11,7 @@ public class Grammar {
     String startingSymbol;
     ArrayList<String> nonTerminals;
     ArrayList<String> terminals;
-    Map<String, ArrayList<ArrayList<String>>> productions;  // key: nonterminal (lhs), value: list of expressions (rhs)
+    Map<String, ArrayList<String>> productions;  // key: nonterminal (lhs), value: list of expressions (rhs)
     Boolean isCFG;
 
     public Grammar(String filename) {
@@ -38,8 +38,16 @@ public class Grammar {
         return grammarSymbols;
     }
 
-    public Map<String, ArrayList<ArrayList<String>>> getProductions() {
+    public Map<String, ArrayList<String>> getProductions() {
         return productions;
+    }
+
+    public ArrayList<ArrayList<String>> getProductionsNonterminal(String nonTerminal){
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        for (ArrayList<String> production : productions.values()) {
+            result.add(production);
+        }
+        return result;
     }
 
     private void setFalseCFG() {
@@ -103,7 +111,9 @@ public class Grammar {
                     if(productions.isEmpty()){
                         startingSymbol = lhs;
                     }
-                    productions.put(lhs, rhsSymbolsList);
+                    for (ArrayList<String> rhsList: rhsSymbolsList) {
+                        productions.put(lhs, rhsList);
+                    }
                     if (!nonTerminals.contains(lhs)) {
                         nonTerminals.add(lhs);
                     }
@@ -127,30 +137,20 @@ public class Grammar {
     }
 
     public void printProductions() {
-        productions.forEach((nonTerminal, productions) -> {
+        productions.forEach((nonTerminal, symbols) -> {
             System.out.print(nonTerminal + " -> ");
-            for (ArrayList<String> production : productions) {
-                for (String symbol : production) {
-                    System.out.print(symbol + " ");
-                }
-                if (productions.indexOf(production) != productions.size() - 1) {
-                    System.out.print("| ");
-                }
+            for (String symbol : symbols) {
+                System.out.print(symbol + " ");
             }
             System.out.println();
         });
     }
 
     public void printProductions(String nonTerminal) {
-        ArrayList<ArrayList<String>> productions = this.productions.get(nonTerminal);
+        ArrayList<String> symbols = this.productions.get(nonTerminal);
         System.out.print(nonTerminal + " -> ");
-        for (ArrayList<String> production : productions) {
-            for (String symbol : production) {
-                System.out.print(symbol + " ");
-            }
-            if (productions.indexOf(production) != productions.size() - 1) {
-                System.out.print("| ");
-            }
+        for (String symbol : symbols) {
+            System.out.print(symbol + " ");
         }
         System.out.println();
     }
