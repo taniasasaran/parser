@@ -3,13 +3,20 @@ import java.util.*;
 public class LRTable {
     private final Map<State, LRTableEntry> table = new HashMap<>();
 
+    private State startingState;
+
 
     public LRTable(CanonicalCollection canonicalCollection) {
         generateTable(canonicalCollection);
+        startingState = canonicalCollection.getStartingState();
     }
 
     public Map<State, LRTableEntry> getTable(){
         return table;
+    }
+
+    public State getStartingState() {
+        return startingState;
     }
 
     private void generateTable(CanonicalCollection canonicalCollection){
