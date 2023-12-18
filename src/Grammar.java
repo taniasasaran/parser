@@ -50,6 +50,10 @@ public class Grammar {
         return result;
     }
 
+    public String getStartingSymbol() {
+        return startingSymbol;
+    }
+
     private void setFalseCFG() {
         isCFG = false;
     }

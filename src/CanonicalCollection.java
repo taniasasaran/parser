@@ -1,15 +1,15 @@
-import java.security.KeyPair;
 import java.util.*;
 
 public class CanonicalCollection {
-    private Grammar enhancedGrammar;
-    private HashMap<Pair<State, String>, ArrayList<State>> stateTransitions;
-    private HashMap<State, Action> actions;
+    private final Grammar enhancedGrammar;
+    private final HashMap<State, Map<String, State>> stateTransitions;
+
+    private final ArrayList<State> states;
 
     public CanonicalCollection(Grammar enhancedGrammar) {
         this.enhancedGrammar = enhancedGrammar;
         this.stateTransitions = new HashMap<>();
-        this.actions = new HashMap<>();
+        this.states = generate();
     }
     public ArrayList<LRitem> goTo(State s, String symbol) {
         ArrayList<LRitem> result = new ArrayList<>();
@@ -24,7 +24,7 @@ public class CanonicalCollection {
         return s.closure(result, enhancedGrammar);
     }
 
-    public ArrayList<State> generate(Grammar enhancedGrammar){
+    public ArrayList<State> generate(){
         ArrayList<State> states = new ArrayList<>();
         ArrayList<State> statesCopy;
         // s0 = closure({[S'->.S]})
@@ -51,13 +51,13 @@ public class CanonicalCollection {
                             statesCopy.add(newState);
                             changed = true;
                         }
-                        if(stateTransitions.containsKey(new Pair<>(s, X))){
-                            stateTransitions.get(new Pair<>(s, X)).add(getState(gotoResult, statesCopy));
+                        if(stateTransitions.containsKey(s)){
+                            stateTransitions.get(s).put(X, getState(gotoResult, statesCopy));
                         }
                         else{
-                            ArrayList<State> result = new ArrayList<>();
-                            result.add(getState(gotoResult, statesCopy));
-                            stateTransitions.put(new Pair<>(s, X), result);
+                            Map<String, State> result = new HashMap<>();
+                            result.put(X, getState(gotoResult, statesCopy));
+                            stateTransitions.put(s, result);
                         }
                     }
                 }
@@ -76,9 +76,16 @@ public class CanonicalCollection {
         return null;
     }
 
-    public void printStates(ArrayList<State> states){
-        for (State state : states) {
-            System.out.println(state);
-        }
+    public Grammar getEnhancedGrammar() {
+        return enhancedGrammar;
     }
+
+    public List<State> getStates(){
+        return states;
+    }
+
+    public HashMap<State, Map<String, State>> getStateTransitions(){
+        return stateTransitions;
+    }
+
 }
