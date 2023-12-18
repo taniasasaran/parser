@@ -90,4 +90,44 @@ public class CanonicalCollection {
         return stateTransitions;
     }
 
+    public ArrayList<ParsingTreeNode> transformStringInTable(String string) {
+        ArrayList<ParsingTreeNode> table = new ArrayList<>();
+        int productionNumber;
+        ParsingTreeNode currentNode;
+        ParsingTreeNode child;
+        ParsingTreeNode sibling;
+        int index = 0;
+        ArrayList<ParsingTreeNode> queue = new ArrayList<>();
+        queue.add(new ParsingTreeNode(index, enhancedGrammar.getStartingSymbol()));
+        index ++;
+        int i = 0;
+        while (i < string.length()) {
+            productionNumber = string.charAt(i) - '0';
+            if(!queue.isEmpty()){
+                currentNode = queue.remove(0);
+                sibling = null;
+                table.add(currentNode);
+                // add its children to the queue using productionNumber
+                Pair<String, ArrayList<String>> production = enhancedGrammar.getProduction(productionNumber);
+                if (production == null) {
+                    continue;
+                }
+                ArrayList<String> rhs = production.second();
+                for (String symbol: rhs){
+                    if (index == 5)
+                        System.out.println("here");
+                    child = new ParsingTreeNode(index, symbol);
+                    child.setParent(currentNode);
+                    child.setSibling(sibling);
+                    queue.add(child);
+                    index ++;
+                    sibling = child;
+                }
+            }
+            i++;
+        }
+        System.out.println(table);
+        return table;
+    }
+
 }
