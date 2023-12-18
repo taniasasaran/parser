@@ -126,6 +126,7 @@ public class CanonicalCollection {
             }
             i++;
         }
+        table.addAll(queue);
         System.out.println(table);
         return table;
     }
