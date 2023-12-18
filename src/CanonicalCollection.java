@@ -30,8 +30,10 @@ public class CanonicalCollection {
         // s0 = closure({[S'->.S]})
         State s0 = new State(new ArrayList<>());
         String Sprime = enhancedGrammar.startingSymbol;
-        ArrayList<String> Sproductions = enhancedGrammar.productions.get(Sprime);
-        s0.addItem(new LRitem(Sprime, new ArrayList<>(), Sproductions));
+        ArrayList<ArrayList<String>> Sproductions = enhancedGrammar.getProductionsNonterminal(Sprime);
+        for (ArrayList<String> production : Sproductions) {
+            s0.addItem(new LRitem(Sprime, new ArrayList<>(), production));
+        }
         s0.setItems(s0.closure(s0.getItems(), enhancedGrammar));
         states.add(s0);
         // for each state s in states

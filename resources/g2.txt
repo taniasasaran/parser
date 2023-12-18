@@ -26,7 +26,7 @@
 
 <writestmt> ::= "WRITE" "(" <expression> ")"
 
-<structstmt> ::= <cmpdstmt> | <ifestmt> | <whilestmt>
+<structstmt> ::= <ifestmt> | <whilestmt>
 
 <ifstmt> ::= "IF" <condition> "{" <stmt> "}"
 
@@ -39,3 +39,7 @@
 <condition> ::= <expression> <RELATION> <expression>
 
 <RELATION> ::= "<" | "<=" | "==" | "<>" | ">=" | ">"
+
+<IDENTIFIER> ::= "salut" | "helu" | "bau"
+
+<nr> ::= "0" | "1" | "2"
