@@ -138,6 +138,12 @@ public class Grammar {
         return productionsIndexed.get(new Pair<>(nonTerminal, rhs));
     }
 
+    public void printProductionsIndexed() {
+        for (Map.Entry<Pair<String, ArrayList<String>>, Integer> entry : productionsIndexed.entrySet()) {
+            System.out.println("(" + entry.getValue() + ")" + entry.getKey());
+        }
+    }
+
     public Pair<String, ArrayList<String>> getProduction(Integer index){
         if (index == 0 || index > this.index) {
             return null;

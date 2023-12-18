@@ -18,5 +18,6 @@ public class Main {
         for (var entry : lrTable.getTable().entrySet()) {
             System.out.println(entry.getKey() + " " + entry.getValue());
         }
+        canCol.transformStringInTable("124345");
     }
 }
