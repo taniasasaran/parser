@@ -1,8 +1,6 @@
-import java.util.ArrayList;
-
 public class Main {
     public static void main(String[] args) {
-        String filename = "resources/g2.txt"; // Syntax.in from GitHub 1b
+        String filename = "resources/g1.txt"; // Syntax.in from GitHub 1b
 //        String filename = "resources/g1.txt"; // grammar from seminary
 //        Grammar grammar = new Grammar(filename);
 //        grammar.printProductions();

@@ -18,25 +18,28 @@ public class LRTable {
         for (State state : canonicalCollection.getStates()) {
             LRitem lRitem = state.getItems().get(0);
             Action action;
-
+            Integer reductionIndex = null;
 
             if(!lRitem.beta.isEmpty()){
                 action = Action.SHIFT;
             }
-            //TODO: fix
-            else if (Objects.equals(lRitem.alfa, new ArrayList<>(Collections.singleton(canonicalCollection.getEnhancedGrammar().getStartingSymbol())))
+            else if (Objects.equals(lRitem.lhs, canonicalCollection.getEnhancedGrammar().getStartingSymbol())
+                    && lRitem.beta.isEmpty()
                     && state.getItems().size() == 1) {
                 action = Action.ACCEPT;
             }
             else if(state.getItems().size() == 1) {
                 action = Action.REDUCE;
+                reductionIndex = canonicalCollection.getEnhancedGrammar().getProductionIndex(lRitem.lhs, lRitem.alfa);
             }
             else {
                 action = Action.ERROR;
                 nrOfErrors++;
             }
 
-            LRTableEntry lrTableEntry = new LRTableEntry(canonicalCollection.getStateTransitions().get(state), action);
+            LRTableEntry lrTableEntry = new LRTableEntry(canonicalCollection.getStateTransitions().get(state),
+                    action,
+                    reductionIndex);
 
             table.put(state, lrTableEntry);
         }
