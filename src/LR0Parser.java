@@ -73,7 +73,7 @@ public class LR0Parser {
                 outputStack.add(0,1);
                 return outputStack;
             }
-            else if(lrTable.getTable().get(state).actionType() == Action.SHIFT){
+            else {
                 System.err.println("Parsing error!!!");
             }
         }
