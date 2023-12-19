@@ -1,12 +1,14 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class LR0Parser {
     private ArrayList<Pair<String, State>> workingStack;
 
-    private ArrayList<String> inputStack = new ArrayList<>();
+    private List<String> inputStack;
 
-    private ArrayList<Integer> outputStack = new ArrayList<>();
+    private ArrayList<Integer> outputStack;
 
     private final LRTable lrTable;
 
@@ -31,10 +33,28 @@ public class LR0Parser {
     }
 
     private void reduce(){
+        State state = workingStack.get(workingStack.size() - 1).second();
+        LRTableEntry lrTableEntry = lrTable.getTable().get(state);
+        Pair<String, ArrayList<String>> production = lrTable.getEnhancedGrammar()
+                .getProductionByIndex(lrTableEntry.reductionIndex());
 
+        ArrayList<String> productionRHS = new ArrayList<>();
+
+        //TODO: DOESN'T WORK!!!!!!
+        for(int i = workingStack.size() - 1; i >= 0; i--){
+            productionRHS.add(0,workingStack.get(i).first());
+
+            if (Objects.equals(productionRHS, production.second())){
+                State mMinusP = workingStack.get(i-1).second();
+                State gotoResult = lrTable.getTable().get(mMinusP).targetStates().get(production.first());
+                workingStack.subList(i -1, workingStack.size() - 1).clear();
+                workingStack.add(new Pair<>(production.first(), gotoResult));
+                return;
+            }
+        }
     }
 
-    public ArrayList<Integer> parse(ArrayList<String> input){
+    public ArrayList<Integer> parse(List<String> input){
         workingStack = new ArrayList<>(Collections.singleton(new Pair<>("$", lrTable.getStartingState())));
         inputStack = input;
         outputStack = new ArrayList<>();

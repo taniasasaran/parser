@@ -3,11 +3,17 @@ import java.util.*;
 public class LRTable {
     private final Map<State, LRTableEntry> table = new HashMap<>();
 
-    private State startingState;
+    private final State startingState;
 
+    private final Grammar enhancedGrammar;
+
+    public Grammar getEnhancedGrammar() {
+        return enhancedGrammar;
+    }
 
     public LRTable(CanonicalCollection canonicalCollection) {
         generateTable(canonicalCollection);
+        enhancedGrammar = canonicalCollection.getEnhancedGrammar();
         startingState = canonicalCollection.getStartingState();
     }
 

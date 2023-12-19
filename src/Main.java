@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 public class Main {
     public static void main(String[] args) {
         String filename = "resources/g1.txt"; // Syntax.in from GitHub 1b
@@ -18,6 +22,13 @@ public class Main {
         for (var entry : lrTable.getTable().entrySet()) {
             System.out.println(entry.getKey() + " " + entry.getValue());
         }
+
+        LR0Parser lr0Parser = new LR0Parser(lrTable);
+
+        for (Integer i : lr0Parser.parse(new ArrayList<>(Arrays.asList("c", "a")))){
+            System.out.println(i);
+        }
+
         canCol.transformStringInTable("124345");
     }
 }
