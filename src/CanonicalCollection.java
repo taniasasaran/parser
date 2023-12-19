@@ -4,6 +4,8 @@ public class CanonicalCollection {
     private final Grammar enhancedGrammar;
     private final HashMap<State, Map<String, State>> stateTransitions;
 
+    private State startingState;
+
     private final ArrayList<State> states;
 
     public CanonicalCollection(Grammar enhancedGrammar) {
@@ -28,14 +30,15 @@ public class CanonicalCollection {
         ArrayList<State> states = new ArrayList<>();
         ArrayList<State> statesCopy;
         // s0 = closure({[S'->.S]})
-        State s0 = new State(new ArrayList<>());
+        startingState = new State(new ArrayList<>());
         String Sprime = enhancedGrammar.startingSymbol;
         ArrayList<ArrayList<String>> Sproductions = enhancedGrammar.getProductionsNonterminal(Sprime);
         for (ArrayList<String> production : Sproductions) {
-            s0.addItem(new LRitem(Sprime, new ArrayList<>(), production));
+            startingState.addItem(new LRitem(Sprime, new ArrayList<>(), production));
         }
-        s0.setItems(s0.closure(s0.getItems(), enhancedGrammar));
-        states.add(s0);
+        startingState.setItems(startingState.closure(startingState.getItems(), enhancedGrammar));
+        states.add(startingState);
+
         // for each state s in states
         boolean changed = true;
         while (changed) {
@@ -76,6 +79,10 @@ public class CanonicalCollection {
             }
         }
         return null;
+    }
+
+    public State getStartingState() {
+        return startingState;
     }
 
     public Grammar getEnhancedGrammar() {

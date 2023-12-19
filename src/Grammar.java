@@ -1,10 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Grammar {
     String filename;
@@ -136,6 +134,14 @@ public class Grammar {
 
     public Integer getProductionIndex(String nonTerminal, ArrayList<String> rhs){
         return productionsIndexed.get(new Pair<>(nonTerminal, rhs));
+    }
+
+    public Pair<String, ArrayList<String>> getProductionByIndex(Integer index){
+        return productionsIndexed.entrySet()
+                .stream()
+                .filter(entry -> Objects.equals(entry.getValue(), index))
+                .map(Map.Entry::getKey)
+                .findAny().orElseThrow();
     }
 
     public void printProductionsIndexed() {
