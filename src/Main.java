@@ -23,7 +23,7 @@ public class Main {
         }
 
         LR0Parser lr0Parser = new LR0Parser(lrTable);
-        ArrayList<Integer> parseResult = lr0Parser.parse(new ArrayList<>(Arrays.asList("c", "a")));
+        ArrayList<Integer> parseResult = lr0Parser.parse(new ArrayList<>(Arrays.asList("a", "b", "b", "c")));
         StringBuilder stringResult = new StringBuilder();
         for (Integer i : parseResult){
             System.out.println(i);

@@ -40,7 +40,6 @@ public class LR0Parser {
 
         ArrayList<String> productionRHS = new ArrayList<>();
 
-        //TODO: DOESN'T WORK!!!!!!
         for(int i = workingStack.size() - 1; i >= 0; i--){
             productionRHS.add(0,workingStack.get(i).first());
 
@@ -70,7 +69,6 @@ public class LR0Parser {
                 reduce();
             }
             else if(lrTable.getTable().get(state).actionType() == Action.ACCEPT){
-                outputStack.add(0,1);
                 return outputStack;
             }
             else {

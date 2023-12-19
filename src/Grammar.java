@@ -119,8 +119,10 @@ public class Grammar {
                         productions.get(lhs).addAll(rhsSymbolsList);
                     }
                     for (ArrayList<String> rhsList: rhsSymbolsList) {
-                        productionsIndexed.put(new Pair<>(lhs, rhsList), index);
-                        index++;
+                        if (!lhs.equals(startingSymbol)) {
+                            productionsIndexed.put(new Pair<>(lhs, rhsList), index);
+                            index++;
+                        }
                     }
                     if (!nonTerminals.contains(lhs)) {
                         nonTerminals.add(lhs);
