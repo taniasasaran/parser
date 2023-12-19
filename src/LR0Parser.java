@@ -47,8 +47,9 @@ public class LR0Parser {
             if (Objects.equals(productionRHS, production.second())){
                 State mMinusP = workingStack.get(i-1).second();
                 State gotoResult = lrTable.getTable().get(mMinusP).targetStates().get(production.first());
-                workingStack.subList(i -1, workingStack.size() - 1).clear();
+                workingStack.subList(i, workingStack.size()).clear();
                 workingStack.add(new Pair<>(production.first(), gotoResult));
+                outputStack.add(0,lrTableEntry.reductionIndex());
                 return;
             }
         }
@@ -56,6 +57,7 @@ public class LR0Parser {
 
     public ArrayList<Integer> parse(List<String> input){
         workingStack = new ArrayList<>(Collections.singleton(new Pair<>("$", lrTable.getStartingState())));
+        Collections.reverse(input);
         inputStack = input;
         outputStack = new ArrayList<>();
 

@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,11 +23,13 @@ public class Main {
         }
 
         LR0Parser lr0Parser = new LR0Parser(lrTable);
-
-        for (Integer i : lr0Parser.parse(new ArrayList<>(Arrays.asList("c", "a")))){
+        ArrayList<Integer> parseResult = lr0Parser.parse(new ArrayList<>(Arrays.asList("c", "a")));
+        StringBuilder stringResult = new StringBuilder();
+        for (Integer i : parseResult){
             System.out.println(i);
+            stringResult.append(i);
         }
 
-        canCol.transformStringInTable("124345");
+        canCol.transformStringInTable(stringResult.toString());
     }
 }
