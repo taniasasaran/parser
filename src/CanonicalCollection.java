@@ -121,8 +121,6 @@ public class CanonicalCollection {
                 }
                 ArrayList<String> rhs = production.second();
                 for (String symbol: rhs){
-                    if (index == 5)
-                        System.out.println("here");
                     child = new ParsingTreeNode(index, symbol);
                     child.setParent(currentNode);
                     child.setSibling(sibling);

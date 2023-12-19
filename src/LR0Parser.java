@@ -70,6 +70,7 @@ public class LR0Parser {
                 reduce();
             }
             else if(lrTable.getTable().get(state).actionType() == Action.ACCEPT){
+                outputStack.add(0,1);
                 return outputStack;
             }
             else if(lrTable.getTable().get(state).actionType() == Action.SHIFT){
