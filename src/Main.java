@@ -30,6 +30,6 @@ public class Main {
             stringResult.append(i);
         }
 
-        canCol.transformStringInTable(stringResult.toString());
+        lr0Parser.transformStringInTable(stringResult.toString());
     }
 }

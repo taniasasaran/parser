@@ -75,7 +75,49 @@ public class LR0Parser {
                 System.err.println("Parsing error!!!");
             }
         }
+    }
 
-
+    public ArrayList<ParsingTreeNode> transformStringInTable(String string) {
+        Grammar enhancedGrammar = lrTable.getEnhancedGrammar();
+        ArrayList<ParsingTreeNode> table = new ArrayList<>();
+        int productionNumber;
+        ParsingTreeNode currentNode;
+        ParsingTreeNode child;
+        ParsingTreeNode sibling;
+        int index = 0;
+        ArrayList<ParsingTreeNode> queue = new ArrayList<>();
+        ArrayList<String> Sproduction = enhancedGrammar.getProductionsNonterminal(enhancedGrammar.getStartingSymbol()).get(0);
+        queue.add(new ParsingTreeNode(index, Sproduction.get(0)));
+        index ++;
+        int i = 0;
+        while (i < string.length()) {
+            while(!queue.isEmpty()){
+                currentNode = queue.remove(0);
+                table.add(currentNode);
+                // if currentNode is a terminal
+                if (enhancedGrammar.getNonTerminals().contains(currentNode.getValue())) {
+                    productionNumber = string.charAt(i) - '0';
+                    sibling = null;
+                    // add its children to the queue using productionNumber
+                    Pair<String, ArrayList<String>> production = enhancedGrammar.getProduction(productionNumber);
+                    if (production == null) {
+                        continue;
+                    }
+                    ArrayList<String> rhs = production.second();
+                    for (String symbol : rhs) {
+                        child = new ParsingTreeNode(index, symbol);
+                        child.setParent(currentNode);
+                        child.setSibling(sibling);
+                        queue.add(child);
+                        index++;
+                        sibling = child;
+                    }
+                    i++;
+                }
+            }
+        }
+        table.addAll(queue);
+        System.out.println(table);
+        return table;
     }
 }
