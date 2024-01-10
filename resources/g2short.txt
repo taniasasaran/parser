@@ -2,13 +2,15 @@
 
 <program> ::= <structstmt>
 
-<writestmt> ::= "WRITE" "(" <nr> ")"
+<stmt> ::= <writestmt>
+
+<writestmt> ::= "write" "(" <nr> ")" ";"
 
 <structstmt> ::= <ifestmt>
 
-<ifstmt> ::= "IF" <condition> "{" <writestmt> "}"
+<ifstmt> ::= "if" "(" <condition> ")" {" <stmt> "}"
 
-<elsestmt> ::= "ELSE" "{" <writestmt> "}"
+<elsestmt> ::= "else" "{" <stmt> "}"
 
 <ifestmt> ::= <ifstmt> <elsestmt>
 
@@ -16,4 +18,4 @@
 
 <RELATION> ::= "<" | "<=" | "==" | "<>" | ">=" | ">"
 
-<nr> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<nr> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "constant"
