@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        String filename = "resources/g1.txt"; // Syntax.in from GitHub 1b
+        String filename = "resources/g2short.txt"; // Syntax.in from GitHub 1b
 //        String filename = "resources/g1.txt"; // grammar from seminary
 //        Grammar grammar = new Grammar(filename);
 //        grammar.printProductions();
@@ -18,18 +18,20 @@ public class Main {
         CanonicalCollection canCol = new CanonicalCollection(enhancedGrammar);
 
         LRTable lrTable = new LRTable(canCol);
-        for (var entry : lrTable.getTable().entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
+//        for (var entry : lrTable.getTable().entrySet()) {
+//            System.out.println(entry.getKey() + " " + entry.getValue());
+//        }
+
 
         LR0Parser lr0Parser = new LR0Parser(lrTable);
-        ArrayList<Integer> parseResult = lr0Parser.parse(new ArrayList<>(Arrays.asList("a", "b", "b", "c")));
+        // IF 2 > 1 { WRITE(2) } ELSE {WRITE(1)}
+        ArrayList<Integer> parseResult = lr0Parser.parse(new ArrayList<>(Arrays.asList("IF", "2", ">", "1", "{", "WRITE", "(", "2", ")", "}", "ELSE", "{", "WRITE", "(", "1", ")", "}")));
         StringBuilder stringResult = new StringBuilder();
         for (Integer i : parseResult){
             System.out.println(i);
             stringResult.append(i);
         }
 
-        lr0Parser.transformStringInTable(stringResult.toString());
+        lr0Parser.transformStringInTable(parseResult);
     }
 }

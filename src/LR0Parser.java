@@ -77,7 +77,7 @@ public class LR0Parser {
         }
     }
 
-    public ArrayList<ParsingTreeNode> transformStringInTable(String string) {
+    public ArrayList<ParsingTreeNode> transformStringInTable(ArrayList<Integer> string) {
         Grammar enhancedGrammar = lrTable.getEnhancedGrammar();
         ArrayList<ParsingTreeNode> table = new ArrayList<>();
         int productionNumber;
@@ -85,18 +85,18 @@ public class LR0Parser {
         ParsingTreeNode child;
         ParsingTreeNode sibling;
         int index = 0;
-        ArrayList<ParsingTreeNode> queue = new ArrayList<>();
+        ArrayList<ParsingTreeNode> stack = new ArrayList<>();
         ArrayList<String> Sproduction = enhancedGrammar.getProductionsNonterminal(enhancedGrammar.getStartingSymbol()).get(0);
-        queue.add(new ParsingTreeNode(index, Sproduction.get(0)));
+        stack.add(new ParsingTreeNode(index, Sproduction.get(0)));
         index ++;
         int i = 0;
-        while (i < string.length()) {
-            while(!queue.isEmpty()){
-                currentNode = queue.remove(0);
+        while (i < string.size()) {
+            while(!stack.isEmpty()){
+                currentNode = stack.remove(stack.size() - 1);
                 table.add(currentNode);
                 // if currentNode is a terminal
                 if (enhancedGrammar.getNonTerminals().contains(currentNode.getValue())) {
-                    productionNumber = string.charAt(i) - '0';
+                    productionNumber = string.get(i);
                     sibling = null;
                     // add its children to the queue using productionNumber
                     Pair<String, ArrayList<String>> production = enhancedGrammar.getProduction(productionNumber);
@@ -108,7 +108,7 @@ public class LR0Parser {
                         child = new ParsingTreeNode(index, symbol);
                         child.setParent(currentNode);
                         child.setSibling(sibling);
-                        queue.add(child);
+                        stack.add(child);
                         index++;
                         sibling = child;
                     }
@@ -116,8 +116,19 @@ public class LR0Parser {
                 }
             }
         }
-        table.addAll(queue);
-        System.out.println(table);
+        table.addAll(stack);
+        table.sort((o1, o2) -> {
+            if (o1.getIndex() < o2.getIndex()) {
+                return -1;
+            } else if (o1.getIndex() > o2.getIndex()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        for (ParsingTreeNode parsingTreeNode : table) {
+            System.out.println(parsingTreeNode);
+        }
         return table;
     }
 }
