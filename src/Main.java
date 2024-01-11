@@ -34,7 +34,9 @@ public class Main {
             System.out.println(i);
         }
 
-        lr0Parser.transformStringInTable(parseResult);
+        ArrayList<ParsingTreeNode> table = lr0Parser.transformStringInTable(parseResult);
+        printTable(table);
+        printTableToFile(table);
     }
 
     static ArrayList<String> getTokens(String source) {
@@ -51,5 +53,24 @@ public class Main {
             e.printStackTrace();
         }
         return tokens;
+    }
+
+    static void printTable(ArrayList<ParsingTreeNode> table){
+        for (ParsingTreeNode parsingTreeNode : table) {
+            System.out.println(parsingTreeNode);
+        }
+    }
+
+    static void printTableToFile(ArrayList<ParsingTreeNode> table){
+        try {
+            java.io.File file = new java.io.File("output/table.out");
+            java.io.PrintWriter output = new java.io.PrintWriter(file);
+            for (ParsingTreeNode parsingTreeNode : table) {
+                output.println(parsingTreeNode);
+            }
+            output.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

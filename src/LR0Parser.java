@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class LR0Parser {
     private ArrayList<Pair<String, State>> workingStack;
@@ -117,18 +114,7 @@ public class LR0Parser {
             }
         }
         table.addAll(stack);
-        table.sort((o1, o2) -> {
-            if (o1.getIndex() < o2.getIndex()) {
-                return -1;
-            } else if (o1.getIndex() > o2.getIndex()) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-        for (ParsingTreeNode parsingTreeNode : table) {
-            System.out.println(parsingTreeNode);
-        }
+        table.sort(Comparator.comparing(ParsingTreeNode::getIndex));
         return table;
     }
 }
