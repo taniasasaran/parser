@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        String filename = "resources/g2short.txt"; // Syntax.in from GitHub 1b
-        String source = "resources/PIF.out"; // pif from GitHub lab5
+        String filename = "resources/g2short2.txt"; // Syntax.in from GitHub 1b
+        String source = "resources/PIF2.out"; // pif from GitHub lab5
 //        String filename = "resources/g1.txt"; // grammar from seminary
 //        String source = "resources/seq.txt"; // sequence from seminary
 //        Grammar grammar = new Grammar(filename);
