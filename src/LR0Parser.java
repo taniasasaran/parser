@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.util.*;
 
 public class LR0Parser {
@@ -13,15 +14,14 @@ public class LR0Parser {
         this.lrTable = lrTable;
     }
 
-    private void shift(){
+    private void shift() throws ParseException {
         State state = workingStack.get(workingStack.size() - 1).second();
         LRTableEntry lrTableEntry = lrTable.getTable().get(state);
         String topOfInputStack = inputStack.get(inputStack.size() - 1);
         State gotoResult = lrTableEntry.targetStates().get(topOfInputStack);
 
         if(gotoResult == null){
-            System.err.println("Parsing error!!!");
-            return;
+            throw new ParseException("Error at symbol " + topOfInputStack, 0);
         }
 
         inputStack.remove(inputStack.size() - 1);
@@ -29,7 +29,7 @@ public class LR0Parser {
         workingStack.add(new Pair<>(topOfInputStack, gotoResult));
     }
 
-    private void reduce(){
+    private void reduce() throws ParseException {
         State state = workingStack.get(workingStack.size() - 1).second();
         LRTableEntry lrTableEntry = lrTable.getTable().get(state);
         Pair<String, ArrayList<String>> production = lrTable.getEnhancedGrammar()
@@ -49,6 +49,8 @@ public class LR0Parser {
                 return;
             }
         }
+
+        throw new ParseException("Reduction error ", 0);
     }
 
     public ArrayList<Integer> parse(List<String> input){
@@ -60,16 +62,29 @@ public class LR0Parser {
         while (true){
             State state = workingStack.get(workingStack.size() - 1).second();
             if(lrTable.getTable().get(state).actionType() == Action.SHIFT){
-                shift();
+                try{
+                    shift();
+                }
+                catch (ParseException ex){
+                    System.err.println("Parsing error!!!" + ex.getMessage());
+                    return null;
+                }
             }
             else if(lrTable.getTable().get(state).actionType() == Action.REDUCE){
-                reduce();
+                try{
+                    reduce();
+                }
+                catch (ParseException ex){
+                    System.err.println("Parsing error!!!" + ex.getMessage());
+                    return null;
+                }
             }
             else if(lrTable.getTable().get(state).actionType() == Action.ACCEPT){
                 return outputStack;
             }
             else {
                 System.err.println("Parsing error!!!");
+                return null;
             }
         }
     }

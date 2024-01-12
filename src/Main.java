@@ -1,6 +1,5 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -30,6 +29,11 @@ public class Main {
         LR0Parser lr0Parser = new LR0Parser(lrTable);
         // IF (2 > 1) { WRITE(2); } ELSE {WRITE(1);}
         ArrayList<Integer> parseResult = lr0Parser.parse(getTokens(source));
+
+        if(parseResult == null){
+            System.err.println("A parsing error occurred.");
+            return;
+        }
         for (Integer i : parseResult){
             System.out.println(i);
         }
